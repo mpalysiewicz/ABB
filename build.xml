@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="ABB workshop">
+	<property name="environment" value="."/>
+	<property name="suiteName" value=""/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="seleniumVersion" value="2.32.0"/>
+    <property name="junitReportDir" value="test-output"/>
+	<property name="BROWSER" value="firefox"/>
+    <path id="ABB.classpath">
+        <pathelement location="bin"/>
+        <pathelement location="lib/testng-6.3.jar"/>
+        <pathelement location="lib/selenium-server-standalone-${seleniumVersion}.jar"/>
+    </path>
+	 <taskdef name="testng" classpath="lib/testng-6.3.jar" classname="org.testng.TestNGAntTask"/>
+	
+	<target name="init" >
+        <mkdir dir="bin"/>
+    </target>
+
+	<target name="clean">
+        <delete dir="bin"/>
+    </target>    
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+    	<javac debug="false" encoding="UTF-8" includeantruntime="false" debuglevel="${debuglevel}" destdir="bin" >         
+    	        <src path="src"/>
+    	        <classpath refid="ABB.classpath"/>
+    	</javac>
+    </target>
+	
+    <target name="TriggerTests">
+    	<echo message="${BROWSER}" />
+    	<testng>
+    		
+    	     <sysproperty key="selenium.browser" value="${BROWSER}"/>
+    		 <classpath refid="ABB.classpath" />
+    		 <xmlfileset dir="${environment}\src\com\abb\pl\testSuites" includes="${suiteName}.xml"/>
+    	</testng>
+    </target>
+</project>
